@@ -66,3 +66,39 @@ class TaskManager:
                 task_dicts = json.load(f)
                 self.tasks = [Task.from_dict(d) for d in task_dicts]
 
+ def complete_task(self, task_id):
+        for task in self.tasks:
+            if task.id == task_id:
+                task.status = "completed"
+                self.save_tasks()
+                print("✔ Task marked as completed.")
+                return
+        print("❌ Task not found.")
+
+    def delete_task(self, task_id):
+        for task in self.tasks:
+            if task.id == task_id:
+                self.tasks.remove(task)
+                self.save_tasks()
+                print("🗑️ Task deleted.")
+                return
+        print("❌ Task not found.")
+
+
+    def search_tasks(self, keyword):
+        found = False
+        for task in self.tasks:
+            if (keyword.lower() in task.title.lower() or
+                keyword.lower() in task.description.lower() or
+                keyword == task.due_date):
+                self.display_task(task)
+                found = True
+        if not found:
+            print("🔍 No matching tasks found.")
+
+            def validate_date(date_str):
+    try:
+        datetime.strptime(date_str, "%Y-%m-%d")
+        return True
+    except ValueError:
+        return False
