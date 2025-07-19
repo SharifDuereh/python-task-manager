@@ -37,3 +37,32 @@ class TaskManager:
 
 
 # === Commit 2 ===
+ def add_task(self, title, description, due_date):
+        task = Task(title, description, due_date)
+        self.tasks.append(task)
+        self.save_tasks()
+
+    def list_tasks(self):
+        print("\n📋 Pending Tasks:")
+        for task in self.tasks:
+            if task.status == "pending":
+                self.display_task(task)
+
+        print("\n✅ Completed Tasks:")
+        for task in self.tasks:
+            if task.status == "completed":
+                self.display_task(task)
+
+    def display_task(self, task):
+        print(f"ID: {task.id}\n  Title: {task.title}\n  Description: {task.description}\n  Due: {task.due_date}\n  Status: {task.status}\n")
+
+ def save_tasks(self):
+        with open("tasks.json", "w") as f:
+            json.dump([task.to_dict() for task in self.tasks], f, indent=4)
+
+    def load_tasks(self):
+        if os.path.exists("tasks.json"):
+            with open("tasks.json", "r") as f:
+                task_dicts = json.load(f)
+                self.tasks = [Task.from_dict(d) for d in task_dicts]
+
