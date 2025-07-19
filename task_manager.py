@@ -1,42 +1,39 @@
-def main():
-    print("Welcome to Task Manager")
+import json
+import os
+import uuid
+from datetime import datetime
 
-if __name__ == "__main__":
-    main()
+class Task:
+    def __init__(self, title, description, due_date, status="pending", task_id=None):
+        self.id = task_id or str(uuid.uuid4())[:8]
+        self.title = title
+        self.description = description
+        self.due_date = due_date
+        self.status = status
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "due_date": self.due_date,
+            "status": self.status
+        }
+
+    @staticmethod
+    def from_dict(data):
+        return Task(
+            data["title"],
+            data["description"],
+            data["due_date"],
+            data["status"],
+            data["id"]
+        )
+
+class TaskManager:
+    def __init__(self):
+        self.tasks = []
+        self.load_tasks()
 
 
-    # task_manager.py
-tasks = []
-
-def add_task(task):
-    tasks.append(task)
-    print(f"Added task: {task}")
-
-def main():
-    while True:
-        command = input("Enter command (add/quit): ")
-        if command == "add":
-            task = input("Enter task: ")
-            add_task(task)
-        elif command == "quit":
-            break
-
-if __name__ == "__main__":
-    main()
-#3
-def show_tasks():
-    if not tasks:
-        print("No tasks yet.")
-    else:
-        for i, task in enumerate(tasks, start=1):
-            print(f"{i}. {task}")
-def main():
-    while True:
-        command = input("Enter command (add/show/quit): ")
-        if command == "add":
-            task = input("Enter task: ")
-            add_task(task)
-        elif command == "show":
-            show_tasks()
-        elif command == "quit":
-            break
+# === Commit 2 ===
